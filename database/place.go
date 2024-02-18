@@ -58,14 +58,10 @@ func (repo *MongoRepo) UpdatePlace(ctx context.Context, data *models.UpdatePlace
 		"$set": bson.M{},
 	}
 	iterableData := map[string]interface{}{
-		"name":                  data.Name,
-		"description":           data.Description,
-		"saved":                 data.Saved,
-		"color":                 data.Color,
-		"image":                 data.Image,
-		"background":            data.Background,
-		"desert_ref":            data.DesertRef,
-		"desert_ref_background": data.DesertRefBackground,
+		"name":        data.Name,
+		"description": data.Description,
+		"coordinates": data.Coordinates,
+		"updated_at":  data.UpdatedAt,
 	}
 	for key, value := range iterableData {
 		if value != nil && value != "" {

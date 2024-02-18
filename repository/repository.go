@@ -14,12 +14,12 @@ type Repository interface {
 	UpdateUser(ctx context.Context, data models.UpdateUser) (*models.Profile, error)
 	DeleteUser(ctx context.Context, id string) error
 
-	//Board
-	InsertBoard(ctx context.Context, board *models.InsertBoard) (*models.Board, error)
-	UpdateBoard(ctx context.Context, data *models.UpdateBoard, id string) (*models.Board, error)
-	GetBoardById(ctx context.Context, id string) (*models.Board, error)
-	ListBoards(ctx context.Context) ([]models.Board, error)
-	DeleteBoard(ctx context.Context, id string) error
+	//Place
+	InsertPlace(ctx context.Context, place *models.InsertPlace) (*models.Place, error)
+	UpdatePlace(ctx context.Context, data *models.UpdatePlace, id string) (*models.Place, error)
+	GetPlaceById(ctx context.Context, id string) (*models.Place, error)
+	ListPlaces(ctx context.Context) ([]models.Place, error)
+	DeletePlace(ctx context.Context, id string) error
 
 	//Close the connection
 	Close() error

@@ -48,10 +48,10 @@ func BindRoutes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/user/update/{id}", handlers.UpdateUserHandler(s)).Methods(http.MethodPatch)
 	r.HandleFunc("/user/delete/{id}", handlers.DeleteUserHandler(s)).Methods(http.MethodDelete)
 
-	// Board routes
-	r.HandleFunc("/board", handlers.InsertBoardHandler(s)).Methods(http.MethodPost)
-	r.HandleFunc("/board/one/{id}", handlers.GetBoardByIdHandler(s)).Methods(http.MethodGet)
-	r.HandleFunc("/board/list", handlers.ListBoardsHandler(s)).Methods(http.MethodGet)
-	r.HandleFunc("/board/update/{id}", handlers.UpdateBoardHandler(s)).Methods(http.MethodPatch)
-	r.HandleFunc("/board/delete/{id}", handlers.DeleteBoardHandler(s)).Methods(http.MethodDelete)
+	// Place routes
+	r.HandleFunc("/place", handlers.InsertPlaceHandler(s)).Methods(http.MethodPost)
+	r.HandleFunc("/place/one/{id}", handlers.GetPlaceByIdHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/place/list", handlers.ListPlacesHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/place/update/{id}", handlers.UpdatePlaceHandler(s)).Methods(http.MethodPatch)
+	r.HandleFunc("/place/delete/{id}", handlers.DeletePlaceHandler(s)).Methods(http.MethodDelete)
 }

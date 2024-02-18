@@ -8,48 +8,48 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (repo *MongoRepo) InsertBoard(ctx context.Context, board *models.InsertBoard) (*models.Board, error) {
-	collection := repo.client.Database("whale_places").Collection("boards")
-	result, err := collection.InsertOne(ctx, board)
+func (repo *MongoRepo) InsertPlace(ctx context.Context, place *models.InsertPlace) (*models.Place, error) {
+	collection := repo.client.Database("whale_places").Collection("places")
+	result, err := collection.InsertOne(ctx, place)
 	if err != nil {
 		return nil, err
 	}
-	createdBoard, err := repo.GetBoardById(ctx, result.InsertedID.(primitive.ObjectID).Hex())
+	createdPlace, err := repo.GetPlaceById(ctx, result.InsertedID.(primitive.ObjectID).Hex())
 	if err != nil {
 		return nil, err
 	}
-	return createdBoard, nil
+	return createdPlace, nil
 }
 
-func (repo *MongoRepo) GetBoardById(ctx context.Context, id string) (*models.Board, error) {
-	collection := repo.client.Database("whale_places").Collection("boards")
+func (repo *MongoRepo) GetPlaceById(ctx context.Context, id string) (*models.Place, error) {
+	collection := repo.client.Database("whale_places").Collection("places")
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, err
 	}
-	var board models.Board
-	err = collection.FindOne(ctx, bson.M{"_id": oid}).Decode(&board)
+	var place models.Place
+	err = collection.FindOne(ctx, bson.M{"_id": oid}).Decode(&place)
 	if err != nil {
 		return nil, err
 	}
-	return &board, nil
+	return &place, nil
 }
 
-func (repo *MongoRepo) ListBoards(ctx context.Context) ([]models.Board, error) {
-	collection := repo.client.Database("whale_places").Collection("boards")
+func (repo *MongoRepo) ListPlaces(ctx context.Context) ([]models.Place, error) {
+	collection := repo.client.Database("whale_places").Collection("places")
 	cursor, err := collection.Find(ctx, bson.M{})
 	if err != nil {
 		return nil, err
 	}
-	var boards []models.Board
-	if err = cursor.All(ctx, &boards); err != nil {
+	var places []models.Place
+	if err = cursor.All(ctx, &places); err != nil {
 		return nil, err
 	}
-	return boards, nil
+	return places, nil
 }
 
-func (repo *MongoRepo) UpdateBoard(ctx context.Context, data *models.UpdateBoard, id string) (*models.Board, error) {
-	collection := repo.client.Database("whale_places").Collection("boards")
+func (repo *MongoRepo) UpdatePlace(ctx context.Context, data *models.UpdatePlace, id string) (*models.Place, error) {
+	collection := repo.client.Database("whale_places").Collection("places")
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, err
@@ -76,15 +76,15 @@ func (repo *MongoRepo) UpdateBoard(ctx context.Context, data *models.UpdateBoard
 	if err != nil {
 		return nil, err
 	}
-	updatedBoard, err := repo.GetBoardById(ctx, id)
+	updatedPlace, err := repo.GetPlaceById(ctx, id)
 	if err != nil {
 		return nil, err
 	}
-	return updatedBoard, nil
+	return updatedPlace, nil
 }
 
-func (repo *MongoRepo) DeleteBoard(ctx context.Context, id string) error {
-	collection := repo.client.Database("whale_places").Collection("boards")
+func (repo *MongoRepo) DeletePlace(ctx context.Context, id string) error {
+	collection := repo.client.Database("whale_places").Collection("places")
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err

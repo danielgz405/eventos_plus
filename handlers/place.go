@@ -14,54 +14,49 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func InsertBoardHandler(s server.Server) http.HandlerFunc {
+func InsertPlaceHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Token validation
-		user, err := middleware.ValidateToken(s, w, r)
+		_, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
 			return
 		}
 		// Handle request
 		w.Header().Set("Content-Type", "application/json")
-		var req = structures.InsertBoardRequest{}
+		var req = structures.InsertPlaceRequest{}
 		err = json.NewDecoder(r.Body).Decode(&req)
 		if err != nil {
 			responses.BadRequest(w, "Invalid request")
 			return
 		}
-		board := models.InsertBoard{}
+		place := models.InsertPlace{}
 		loc, error := time.LoadLocation("America/Bogota")
 		if error != nil {
 			responses.InternalServerError(w, "Invalid request")
 			return
 		}
 
-		board = models.InsertBoard{
+		place = models.InsertPlace{
 			Name:        req.Name,
 			Description: req.Description,
-			UserId:      user.Id.Hex(),
-			Saved:       false,
-			Color: models.ColorBoard{
-				Primary:   req.Primary,
-				Secondary: req.Secondary,
+			Coordinates: models.Coordinates{
+				Latitude:  req.Coordinates.Latitude,
+				Longitude: req.Coordinates.Longitude,
 			},
-			Image:               req.Image,
-			Background:          req.Background,
-			CreatedAt:           user.Name + " " + time.Now().In(loc).Format("2006-01-02 15:04:05"),
-			DesertRef:           req.DesertRef,
-			DesertRefBackground: req.DesertRefBackground,
+			CreatedAt: time.Now().In(loc),
+			UpdatedAt: time.Now().In(loc),
 		}
 
-		createdBoard, err := repository.InsertBoard(r.Context(), &board)
+		createdPlace, err := repository.InsertPlace(r.Context(), &place)
 		if err != nil {
 			responses.InternalServerError(w, err.Error())
 			return
 		}
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(createdBoard)
+		json.NewEncoder(w).Encode(createdPlace)
 	}
 }
-func ListBoardsHandler(s server.Server) http.HandlerFunc {
+func ListPlacesHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
@@ -70,20 +65,20 @@ func ListBoardsHandler(s server.Server) http.HandlerFunc {
 		}
 		// Handle request
 		w.Header().Set("Content-Type", "application/json")
-		boards, err := repository.ListBoards(r.Context())
+		places, err := repository.ListPlaces(r.Context())
 		if err != nil {
 			responses.InternalServerError(w, err.Error())
 			return
 		}
-		if boards == nil {
-			boards = []models.Board{}
+		if places == nil {
+			places = []models.Place{}
 		}
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(boards)
+		json.NewEncoder(w).Encode(places)
 	}
 }
 
-func UpdateBoardHandler(s server.Server) http.HandlerFunc {
+func UpdatePlaceHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
@@ -93,38 +88,39 @@ func UpdateBoardHandler(s server.Server) http.HandlerFunc {
 		// Handle request
 		w.Header().Set("Content-Type", "application/json")
 		params := mux.Vars(r)
-		var req = structures.UpdateBoardRequest{}
+		var req = structures.UpdatePlaceRequest{}
 		err = json.NewDecoder(r.Body).Decode(&req)
 		if err != nil {
 			responses.BadRequest(w, "Invalid request")
 			return
 		}
-		board := models.UpdateBoard{}
+		loc, error := time.LoadLocation("America/Bogota")
+		if error != nil {
+			responses.InternalServerError(w, "Invalid request")
+			return
+		}
+		place := models.UpdatePlace{}
 
-		board = models.UpdateBoard{
+		place = models.UpdatePlace{
 			Name:        req.Name,
 			Description: req.Description,
-			Saved:       req.Saved,
-			Color: models.ColorBoard{
-				Primary:   req.Primary,
-				Secondary: req.Secondary,
+			Coordinates: models.Coordinates{
+				Latitude:  req.Coordinates.Latitude,
+				Longitude: req.Coordinates.Longitude,
 			},
-			Image:               req.Image,
-			Background:          req.Background,
-			DesertRef:           req.DesertRef,
-			DesertRefBackground: req.DesertRefBackground,
+			UpdatedAt: time.Now().In(loc),
 		}
 
-		updatedBoard, err := repository.UpdateBoard(r.Context(), &board, params["id"])
+		updatedPlace, err := repository.UpdatePlace(r.Context(), &place, params["id"])
 		if err != nil {
 			responses.InternalServerError(w, err.Error())
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(updatedBoard)
+		json.NewEncoder(w).Encode(updatedPlace)
 	}
 }
-func DeleteBoardHandler(s server.Server) http.HandlerFunc {
+func DeletePlaceHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
@@ -134,16 +130,16 @@ func DeleteBoardHandler(s server.Server) http.HandlerFunc {
 		// Handle request
 		w.Header().Set("Content-Type", "application/json")
 		params := mux.Vars(r)
-		err = repository.DeleteBoard(r.Context(), params["id"])
+		err = repository.DeletePlace(r.Context(), params["id"])
 		if err != nil {
 			responses.InternalServerError(w, err.Error())
 			return
 		}
-		responses.DeleteResponse(w, "Board deleted")
+		responses.DeleteResponse(w, "Place deleted")
 	}
 }
 
-func GetBoardByIdHandler(s server.Server) http.HandlerFunc {
+func GetPlaceByIdHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
@@ -153,12 +149,12 @@ func GetBoardByIdHandler(s server.Server) http.HandlerFunc {
 		// Handle request
 		w.Header().Set("Content-Type", "application/json")
 		params := mux.Vars(r)
-		board, err := repository.GetBoardById(r.Context(), params["id"])
+		place, err := repository.GetPlaceById(r.Context(), params["id"])
 		if err != nil {
 			responses.InternalServerError(w, err.Error())
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(board)
+		json.NewEncoder(w).Encode(place)
 	}
 }

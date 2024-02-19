@@ -43,6 +43,12 @@ func SignUpHandler(s server.Server) http.HandlerFunc {
 			responses.BadRequest(w, "Error creating user")
 			return
 		}
+
+		repository.AuditOperation(r.Context(), models.Profile{Name: "N/A"}, "users", "created")
+		if err != nil {
+			responses.InternalServerError(w, "Audit error")
+			return
+		}
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(profile)
 	}
@@ -77,6 +83,12 @@ func LoginHandler(s server.Server) http.HandlerFunc {
 			responses.NoAuthResponse(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
+
+		repository.AuditOperation(r.Context(), models.Profile{Id: user.Id, Name: user.Name, Email: user.Email, Image: user.Image, DesertRef: user.DesertRef}, "users", "read")
+		if err != nil {
+			responses.InternalServerError(w, "Audit error")
+			return
+		}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(responses.LoginResponse{
 			Message: "Welcome, you are logged in!",
@@ -89,8 +101,14 @@ func ProfileHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		// Token validation
-		profile, _ := middleware.ValidateToken(s, w, r)
+		profile, err := middleware.ValidateToken(s, w, r)
 		// Handle request
+
+		repository.AuditOperation(r.Context(), *profile, "users", "read")
+		if err != nil {
+			responses.InternalServerError(w, "Audit error")
+			return
+		}
 		json.NewEncoder(w).Encode(profile)
 	}
 }
@@ -98,7 +116,7 @@ func ProfileHandler(s server.Server) http.HandlerFunc {
 func UpdateUserHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Token validation
-		_, err := middleware.ValidateToken(s, w, r)
+		profile, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
 			return
 		}
@@ -123,6 +141,12 @@ func UpdateUserHandler(s server.Server) http.HandlerFunc {
 			responses.BadRequest(w, "Error updating user")
 			return
 		}
+
+		repository.AuditOperation(r.Context(), *profile, "users", "update")
+		if err != nil {
+			responses.InternalServerError(w, "Audit error")
+			return
+		}
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(updatedUser)
 	}
@@ -131,7 +155,7 @@ func UpdateUserHandler(s server.Server) http.HandlerFunc {
 func DeleteUserHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Token validation
-		_, err := middleware.ValidateToken(s, w, r)
+		profile, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
 			return
 		}
@@ -141,6 +165,12 @@ func DeleteUserHandler(s server.Server) http.HandlerFunc {
 		err = repository.DeleteUser(r.Context(), params["id"])
 		if err != nil {
 			responses.BadRequest(w, "Error deleting user")
+			return
+		}
+
+		repository.AuditOperation(r.Context(), *profile, "users", "delete")
+		if err != nil {
+			responses.InternalServerError(w, "Audit error")
 			return
 		}
 		w.WriteHeader(http.StatusOK)

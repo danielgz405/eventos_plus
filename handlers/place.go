@@ -17,7 +17,7 @@ import (
 func InsertPlaceHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Token validation
-		_, err := middleware.ValidateToken(s, w, r)
+		user, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
 			return
 		}
@@ -52,6 +52,13 @@ func InsertPlaceHandler(s server.Server) http.HandlerFunc {
 			responses.InternalServerError(w, err.Error())
 			return
 		}
+
+		repository.AuditOperation(r.Context(), *user, "place", "created")
+		if err != nil {
+			responses.InternalServerError(w, "Audit error")
+			return
+		}
+
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(createdPlace)
 	}
@@ -59,7 +66,7 @@ func InsertPlaceHandler(s server.Server) http.HandlerFunc {
 func ListPlacesHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Token validation
-		_, err := middleware.ValidateToken(s, w, r)
+		user, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
 			return
 		}
@@ -73,6 +80,11 @@ func ListPlacesHandler(s server.Server) http.HandlerFunc {
 		if places == nil {
 			places = []models.Place{}
 		}
+		repository.AuditOperation(r.Context(), *user, "place", "read")
+		if err != nil {
+			responses.InternalServerError(w, "Audit error")
+			return
+		}
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(places)
 	}
@@ -81,7 +93,7 @@ func ListPlacesHandler(s server.Server) http.HandlerFunc {
 func UpdatePlaceHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Token validation
-		_, err := middleware.ValidateToken(s, w, r)
+		user, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
 			return
 		}
@@ -116,6 +128,12 @@ func UpdatePlaceHandler(s server.Server) http.HandlerFunc {
 			responses.InternalServerError(w, err.Error())
 			return
 		}
+
+		repository.AuditOperation(r.Context(), *user, "place", "updated")
+		if err != nil {
+			responses.InternalServerError(w, "Audit error")
+			return
+		}
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(updatedPlace)
 	}
@@ -123,7 +141,7 @@ func UpdatePlaceHandler(s server.Server) http.HandlerFunc {
 func DeletePlaceHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Token validation
-		_, err := middleware.ValidateToken(s, w, r)
+		user, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
 			return
 		}
@@ -135,6 +153,12 @@ func DeletePlaceHandler(s server.Server) http.HandlerFunc {
 			responses.InternalServerError(w, err.Error())
 			return
 		}
+
+		repository.AuditOperation(r.Context(), *user, "place", "delete")
+		if err != nil {
+			responses.InternalServerError(w, "Audit error")
+			return
+		}
 		responses.DeleteResponse(w, "Place deleted")
 	}
 }
@@ -142,7 +166,7 @@ func DeletePlaceHandler(s server.Server) http.HandlerFunc {
 func GetPlaceByIdHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//Token validation
-		_, err := middleware.ValidateToken(s, w, r)
+		user, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
 			return
 		}
@@ -152,6 +176,12 @@ func GetPlaceByIdHandler(s server.Server) http.HandlerFunc {
 		place, err := repository.GetPlaceById(r.Context(), params["id"])
 		if err != nil {
 			responses.InternalServerError(w, err.Error())
+			return
+		}
+
+		repository.AuditOperation(r.Context(), *user, "place", "read")
+		if err != nil {
+			responses.InternalServerError(w, "Audit error")
 			return
 		}
 		w.WriteHeader(http.StatusOK)

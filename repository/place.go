@@ -6,8 +6,8 @@ import (
 	"github.com/danielgz405/whale_places/models"
 )
 
-func InsertPlace(ctx context.Context, user *models.InsertPlace) (*models.Place, error) {
-	return implementation.InsertPlace(ctx, user)
+func InsertPlace(ctx context.Context, place *models.InsertPlace) (*models.Place, error) {
+	return implementation.InsertPlace(ctx, place)
 }
 
 func GetPlaceById(ctx context.Context, id string) (*models.Place, error) {

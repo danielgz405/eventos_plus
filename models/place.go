@@ -31,6 +31,6 @@ type UpdatePlace struct {
 }
 
 type Coordinates struct {
-	Latitude  float64 `json:"latitude" bson:"latitude"`
-	Longitude float64 `json:"longitude" bson:"longitude"`
+	Latitude  string `json:"latitude" bson:"latitude"`
+	Longitude string `json:"longitude" bson:"longitude"`
 }

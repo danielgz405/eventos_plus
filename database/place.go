@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/danielgz405/whale_places/models"
 	"go.mongodb.org/mongo-driver/bson"
@@ -10,7 +9,6 @@ import (
 )
 
 func (repo *MongoRepo) InsertPlace(ctx context.Context, place *models.InsertPlace) (*models.Place, error) {
-	fmt.Println(ctx)
 	collection := repo.client.Database("whale_places").Collection("places")
 	result, err := collection.InsertOne(ctx, place)
 	if err != nil {

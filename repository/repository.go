@@ -21,6 +21,13 @@ type Repository interface {
 	ListPlaces(ctx context.Context) ([]models.Place, error)
 	DeletePlace(ctx context.Context, id string) error
 
+	//type events
+	InsertTypeEvent(ctx context.Context, typeEvent *models.InsertTypeEvent) (*models.TypeEvent, error)
+	UpdateTypeEvent(ctx context.Context, data *models.UpdateTypeEvent, id string) (*models.TypeEvent, error)
+	GetTypeEventById(ctx context.Context, id string) (*models.TypeEvent, error)
+	ListTypeEvents(ctx context.Context) ([]models.TypeEvent, error)
+	DeleteTypeEvent(ctx context.Context, id string) error
+
 	//audit
 	AuditOperation(ctx context.Context, user models.Profile, table string, operationType string) error
 

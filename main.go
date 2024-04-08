@@ -54,4 +54,11 @@ func BindRoutes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/place/list", handlers.ListPlacesHandler(s)).Methods(http.MethodGet)
 	r.HandleFunc("/place/update/{id}", handlers.UpdatePlaceHandler(s)).Methods(http.MethodPatch)
 	r.HandleFunc("/place/delete/{id}", handlers.DeletePlaceHandler(s)).Methods(http.MethodDelete)
+
+	// types events routes
+	r.HandleFunc("/type_event", handlers.InsertTypeEventHandler(s)).Methods(http.MethodPost)
+	r.HandleFunc("/type_event/one/{id}", handlers.GetTypeEventByIdHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/type_event/list", handlers.ListTypeEventsHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/type_event/update/{id}", handlers.UpdateTypeEventHandler(s)).Methods(http.MethodPatch)
+	r.HandleFunc("/type_event/delete/{id}", handlers.DeleteTypeEventHandler(s)).Methods(http.MethodDelete)
 }

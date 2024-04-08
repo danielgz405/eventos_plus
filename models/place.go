@@ -8,6 +8,7 @@ import (
 
 type Place struct {
 	ID          primitive.ObjectID `json:"_id" bson:"_id"`
+	UserID      string             `json:"user_id" bson:"user_id"`
 	Name        string             `json:"name" bson:"name"`
 	Description string             `json:"description" bson:"description"`
 	Coordinates Coordinates        `json:"coordinates" bson:"coordinates"`
@@ -16,6 +17,7 @@ type Place struct {
 }
 
 type InsertPlace struct {
+	UserID      string      `json:"user_id" bson:"user_id"`
 	Name        string      `json:"name" bson:"name"`
 	Description string      `json:"description" bson:"description"`
 	Coordinates Coordinates `json:"coordinates" bson:"coordinates"`

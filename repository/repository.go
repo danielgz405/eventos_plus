@@ -34,6 +34,11 @@ type Repository interface {
 	GetReserveById(ctx context.Context, id string) (*models.Reserve, error)
 	ListReservesByUser(ctx context.Context, userId string) ([]models.Reserve, error)
 
+	//type events
+	InsertTransaction(ctx context.Context, reserve *models.InsertTransaction) (*models.Transaction, error)
+	GetTransactionById(ctx context.Context, id string) (*models.Transaction, error)
+	ListTransactionsByUser(ctx context.Context, userId string) ([]models.Transaction, error)
+
 	//audit
 	AuditOperation(ctx context.Context, user models.Profile, table string, operationType string) error
 

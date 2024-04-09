@@ -67,4 +67,9 @@ func BindRoutes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/reserve/one/{id}", handlers.GetReserveByIdHandler(s)).Methods(http.MethodGet)
 	r.HandleFunc("/reserve/list/{user_id}", handlers.ListReservesByUserHandler(s)).Methods(http.MethodGet)
 	r.HandleFunc("/reserve/update/{id}", handlers.UpdateReserveHandler(s)).Methods(http.MethodPatch)
+
+	// transactions routes
+	r.HandleFunc("/transaction", handlers.InsertTransactionHandler(s)).Methods(http.MethodPost)
+	r.HandleFunc("/transaction/one/{id}", handlers.GetTransactionByIdHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/transaction/list/{user_id}", handlers.ListTransactionsByUserHandler(s)).Methods(http.MethodGet)
 }

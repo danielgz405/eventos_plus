@@ -48,6 +48,19 @@ func (repo *MongoRepo) ListReservesByUser(ctx context.Context, userId string) ([
 	return typeEvents, nil
 }
 
+func (repo *MongoRepo) ListReservesByEvent(ctx context.Context, eventId string) ([]models.Reserve, error) {
+	collection := repo.client.Database("whale_places").Collection("typeEvents")
+	cursor, err := collection.Find(ctx, bson.M{"event_id": eventId})
+	if err != nil {
+		return nil, err
+	}
+	var typeEvents []models.Reserve
+	if err = cursor.All(ctx, &typeEvents); err != nil {
+		return nil, err
+	}
+	return typeEvents, nil
+}
+
 func (repo *MongoRepo) UpdateReserve(ctx context.Context, data *models.UpdateReserve, id string) (*models.Reserve, error) {
 	collection := repo.client.Database("whale_places").Collection("typeEvents")
 	oid, err := primitive.ObjectIDFromHex(id)

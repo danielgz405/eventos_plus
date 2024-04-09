@@ -72,4 +72,13 @@ func BindRoutes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/transaction", handlers.InsertTransactionHandler(s)).Methods(http.MethodPost)
 	r.HandleFunc("/transaction/one/{id}", handlers.GetTransactionByIdHandler(s)).Methods(http.MethodGet)
 	r.HandleFunc("/transaction/list/{user_id}", handlers.ListTransactionsByUserHandler(s)).Methods(http.MethodGet)
+
+	//Event
+	r.HandleFunc("/event/create", handlers.CreateEventHandler(s)).Methods(http.MethodPost)
+	r.HandleFunc("/event/{id}", handlers.GetEventByIdHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/event/updated/{id}", handlers.UpdateEventHandler(s)).Methods(http.MethodPatch)
+	r.HandleFunc("/event/delete/{id}", handlers.DeleteEventHandler(s)).Methods(http.MethodDelete)
+	r.HandleFunc("/event/list/{limit}/{page}", handlers.ListEventsByPageHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/event/list/all", handlers.ListEventsHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/event/list/name/{limit}/{page}/{name}", handlers.ListEventsByNameHandler(s)).Methods(http.MethodGet)
 }

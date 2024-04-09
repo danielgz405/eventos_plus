@@ -28,19 +28,25 @@ type Repository interface {
 	ListTypeEvents(ctx context.Context) ([]models.TypeEvent, error)
 	DeleteTypeEvent(ctx context.Context, id string) error
 
-	//type events
+	//reserve
 	InsertReserve(ctx context.Context, reserve *models.InsertReserve) (*models.Reserve, error)
 	UpdateReserve(ctx context.Context, data *models.UpdateReserve, id string) (*models.Reserve, error)
 	GetReserveById(ctx context.Context, id string) (*models.Reserve, error)
 	ListReservesByUser(ctx context.Context, userId string) ([]models.Reserve, error)
 
-	//type events
+	//transactions
 	InsertTransaction(ctx context.Context, reserve *models.InsertTransaction) (*models.Transaction, error)
 	GetTransactionById(ctx context.Context, id string) (*models.Transaction, error)
 	ListTransactionsByUser(ctx context.Context, userId string) ([]models.Transaction, error)
 
-	//audit
-	AuditOperation(ctx context.Context, user models.Profile, table string, operationType string) error
+	//events
+	InsertEvent(ctx context.Context, event *models.InsertEvent) (*models.Event, error)
+	GetEventById(ctx context.Context, id string) (*models.Event, error)
+	ListEvents(ctx context.Context) ([]models.Event, error)
+	UpdateEvent(ctx context.Context, data *models.UpdateEvent, id string) (*models.Event, error)
+	DeleteEvent(ctx context.Context, id string) error
+	ListEventsByPage(ctx context.Context, limit int, page int) ([]models.Event, int, error)
+	ListEventsByName(ctx context.Context, limit int, page int, name string) ([]models.Event, int, error)
 
 	//Close the connection
 	Close() error

@@ -93,13 +93,12 @@ func ProfileHandler(s server.Server) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		// Token validation
 		profile, err := middleware.ValidateToken(s, w, r)
-		// Handle request
-
-		repository.AuditOperation(r.Context(), *profile, "users", "read")
 		if err != nil {
-			responses.InternalServerError(w, "Audit error")
+			responses.NoAuthResponse(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
+		// Handle request
+
 		json.NewEncoder(w).Encode(profile)
 	}
 }

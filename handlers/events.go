@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -28,6 +29,7 @@ func CreateEventHandler(s server.Server) http.HandlerFunc {
 		req := structures.InsertEventsRequest{}
 		err = json.NewDecoder(r.Body).Decode(&req)
 		if err != nil {
+			fmt.Println(err)
 			responses.BadRequest(w, "Invalid request body")
 			return
 		}
@@ -178,13 +180,13 @@ func ListEventsHandler(s server.Server) http.HandlerFunc {
 		}
 		//Handle request
 		w.Header().Set("Content-Type", "application/json")
-		eventss, err := repository.ListEvents(r.Context())
+		events, err := repository.ListEvents(r.Context())
 		if err != nil {
-			responses.BadRequest(w, "Error getting eventss")
+			responses.BadRequest(w, "Error getting events")
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(eventss)
+		json.NewEncoder(w).Encode(events)
 	}
 }
 

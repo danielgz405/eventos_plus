@@ -35,11 +35,14 @@ func (repo *MongoRepo) GetUserById(ctx context.Context, id string) (*models.Prof
 	}
 	// Populate profile
 	var profile = models.Profile{
-		Id:       user.Id,
-		Name:     user.Name,
-		Email:    user.Email,
-		Image:    user.Image,
-		ImageRef: user.ImageRef,
+		Id:          user.Id,
+		Name:        user.Name,
+		Email:       user.Email,
+		Image:       user.Image,
+		ImageRef:    user.ImageRef,
+		PaymentData: user.PaymentData,
+		IsCreator:   user.IsCreator,
+		PaypalEmail: user.PaypalEmail,
 	}
 	return &profile, nil
 }

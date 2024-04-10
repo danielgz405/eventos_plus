@@ -11,11 +11,13 @@ import (
 	"github.com/danielgz405/whale_places/responses"
 	"github.com/danielgz405/whale_places/server"
 	"github.com/danielgz405/whale_places/structures"
+	"github.com/danielgz405/whale_places/utils"
 	"github.com/gorilla/mux"
 )
 
 func InsertReserveHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection_2(s)
 		//Token validation
 		user, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
@@ -48,6 +50,7 @@ func InsertReserveHandler(s server.Server) http.HandlerFunc {
 }
 func ListReservesByUserHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection_2(s)
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
@@ -72,6 +75,7 @@ func ListReservesByUserHandler(s server.Server) http.HandlerFunc {
 
 func UpdateReserveHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection_2(s)
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
@@ -113,6 +117,7 @@ func UpdateReserveHandler(s server.Server) http.HandlerFunc {
 
 func GetReserveByIdHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection_2(s)
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
 		if err != nil {

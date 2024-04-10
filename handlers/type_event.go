@@ -10,11 +10,13 @@ import (
 	"github.com/danielgz405/whale_places/responses"
 	"github.com/danielgz405/whale_places/server"
 	"github.com/danielgz405/whale_places/structures"
+	"github.com/danielgz405/whale_places/utils"
 	"github.com/gorilla/mux"
 )
 
 func InsertTypeEventHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection_3(s)
 		//Token validation
 		user, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
@@ -70,6 +72,7 @@ func ListTypeEventsHandler(s server.Server) http.HandlerFunc {
 
 func UpdateTypeEventHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection_3(s)
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
@@ -102,6 +105,7 @@ func UpdateTypeEventHandler(s server.Server) http.HandlerFunc {
 }
 func DeleteTypeEventHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection_3(s)
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
@@ -122,6 +126,7 @@ func DeleteTypeEventHandler(s server.Server) http.HandlerFunc {
 
 func GetTypeEventByIdHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection_3(s)
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
 		if err != nil {

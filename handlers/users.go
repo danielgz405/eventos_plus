@@ -11,6 +11,7 @@ import (
 	"github.com/danielgz405/whale_places/responses"
 	"github.com/danielgz405/whale_places/server"
 	"github.com/danielgz405/whale_places/structures"
+	"github.com/danielgz405/whale_places/utils"
 	"github.com/golang-jwt/jwt"
 	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
@@ -18,6 +19,7 @@ import (
 
 func SignUpHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection(s)
 		// Handle request
 		w.Header().Set("Content-Type", "application/json")
 		var req = structures.SignUpLoginRequest{}
@@ -52,6 +54,7 @@ func SignUpHandler(s server.Server) http.HandlerFunc {
 
 func LoginHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection(s)
 		var req = structures.SignUpLoginRequest{}
 		err := json.NewDecoder(r.Body).Decode(&req)
 		if err != nil {
@@ -90,6 +93,7 @@ func LoginHandler(s server.Server) http.HandlerFunc {
 
 func ProfileHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection(s)
 		w.Header().Set("Content-Type", "application/json")
 		// Token validation
 		profile, err := middleware.ValidateToken(s, w, r)
@@ -105,6 +109,7 @@ func ProfileHandler(s server.Server) http.HandlerFunc {
 
 func UpdateUserHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection(s)
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
@@ -139,6 +144,7 @@ func UpdateUserHandler(s server.Server) http.HandlerFunc {
 
 func DeleteUserHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection(s)
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
 		if err != nil {

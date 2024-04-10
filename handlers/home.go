@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/danielgz405/whale_places/server"
+	"github.com/danielgz405/whale_places/utils"
 )
 
 type HomeResponse struct {
@@ -13,6 +14,7 @@ type HomeResponse struct {
 }
 
 func HomeHandler(s server.Server) http.HandlerFunc {
+	utils.DatabaseConnection(s)
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)

@@ -13,11 +13,13 @@ import (
 	"github.com/danielgz405/whale_places/responses"
 	"github.com/danielgz405/whale_places/server"
 	"github.com/danielgz405/whale_places/structures"
+	"github.com/danielgz405/whale_places/utils"
 	"github.com/gorilla/mux"
 )
 
 func CreateEventHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection(s)
 		//Token validation
 		profile, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
@@ -66,6 +68,7 @@ func CreateEventHandler(s server.Server) http.HandlerFunc {
 
 func GetEventByIdHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection(s)
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
@@ -87,6 +90,7 @@ func GetEventByIdHandler(s server.Server) http.HandlerFunc {
 
 func UpdateEventHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection(s)
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
@@ -120,6 +124,7 @@ func UpdateEventHandler(s server.Server) http.HandlerFunc {
 
 func DeleteEventHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection(s)
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
@@ -139,6 +144,7 @@ func DeleteEventHandler(s server.Server) http.HandlerFunc {
 
 func ListEventsByPageHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection(s)
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
@@ -173,6 +179,7 @@ func ListEventsByPageHandler(s server.Server) http.HandlerFunc {
 
 func ListEventsHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection(s)
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
 		if err != nil {
@@ -192,6 +199,7 @@ func ListEventsHandler(s server.Server) http.HandlerFunc {
 
 func ListEventsByNameHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		utils.DatabaseConnection(s)
 		//Token validation
 		_, err := middleware.ValidateToken(s, w, r)
 		if err != nil {

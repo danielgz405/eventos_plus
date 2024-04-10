@@ -22,11 +22,15 @@ func main() {
 	PORT := os.Getenv("PORT")
 	JWT_SECRET := os.Getenv("JWT_SECRET")
 	DB_URI := os.Getenv("DB_URI")
+	DB_URI_2 := os.Getenv("DB_URI_2")
+	DB_URI_3 := os.Getenv("DB_URI_3")
 
 	s, err := server.NewServer(context.Background(), &server.Config{
 		Port:      ":" + PORT,
 		JWTSecret: JWT_SECRET,
 		DbURI:     DB_URI,
+		DB_URI_2:  DB_URI_2,
+		DB_URI_3:  DB_URI_3,
 	})
 	if err != nil {
 		log.Fatal(err)

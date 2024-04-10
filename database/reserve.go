@@ -9,7 +9,7 @@ import (
 )
 
 func (repo *MongoRepo) InsertReserve(ctx context.Context, typeEvent *models.InsertReserve) (*models.Reserve, error) {
-	collection := repo.client.Database("whale_places").Collection("typeEvents")
+	collection := repo.client.Database("whale_places").Collection("reserve")
 	result, err := collection.InsertOne(ctx, typeEvent)
 	if err != nil {
 		return nil, err
@@ -22,7 +22,7 @@ func (repo *MongoRepo) InsertReserve(ctx context.Context, typeEvent *models.Inse
 }
 
 func (repo *MongoRepo) GetReserveById(ctx context.Context, id string) (*models.Reserve, error) {
-	collection := repo.client.Database("whale_places").Collection("typeEvents")
+	collection := repo.client.Database("whale_places").Collection("reserve")
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, err
@@ -36,33 +36,33 @@ func (repo *MongoRepo) GetReserveById(ctx context.Context, id string) (*models.R
 }
 
 func (repo *MongoRepo) ListReservesByUser(ctx context.Context, userId string) ([]models.Reserve, error) {
-	collection := repo.client.Database("whale_places").Collection("typeEvents")
+	collection := repo.client.Database("whale_places").Collection("reserve")
 	cursor, err := collection.Find(ctx, bson.M{"user_id": userId})
 	if err != nil {
 		return nil, err
 	}
-	var typeEvents []models.Reserve
-	if err = cursor.All(ctx, &typeEvents); err != nil {
+	var reserve []models.Reserve
+	if err = cursor.All(ctx, &reserve); err != nil {
 		return nil, err
 	}
-	return typeEvents, nil
+	return reserve, nil
 }
 
 func (repo *MongoRepo) ListReservesByEvent(ctx context.Context, eventId string) ([]models.Reserve, error) {
-	collection := repo.client.Database("whale_places").Collection("typeEvents")
+	collection := repo.client.Database("whale_places").Collection("reserve")
 	cursor, err := collection.Find(ctx, bson.M{"event_id": eventId})
 	if err != nil {
 		return nil, err
 	}
-	var typeEvents []models.Reserve
-	if err = cursor.All(ctx, &typeEvents); err != nil {
+	var reserve []models.Reserve
+	if err = cursor.All(ctx, &reserve); err != nil {
 		return nil, err
 	}
-	return typeEvents, nil
+	return reserve, nil
 }
 
 func (repo *MongoRepo) UpdateReserve(ctx context.Context, data *models.UpdateReserve, id string) (*models.Reserve, error) {
-	collection := repo.client.Database("whale_places").Collection("typeEvents")
+	collection := repo.client.Database("whale_places").Collection("reserve")
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, err
